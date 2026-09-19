@@ -1,31 +1,60 @@
 # Lab Setup Walkthrough
 
-This file documents the initial setup evidence captured so far.
+## Purpose
 
-## 1. Build the Ubuntu lab container
-- `media/screenshots/01-proxmox-create-lxc.png`
+This phase establishes a dedicated workstation for authorized CloudFoxable testing and separates the **privileged deployment identity** from the **lower-privilege CTF starting identity** used for assessment work.
 
-## 2. Install AWS CLI in the container
-- `media/screenshots/02-install-aws-cli.png`
-- `media/screenshots/06-aws-cli-installed-login-attempt.png`
+## 1. Assessment Workstation
 
-## 3. Configure Terraform tooling
-- `media/screenshots/03-install-terraform-repo.png`
-- `media/screenshots/08-terraform-init-success.png`
+I created an Ubuntu LXC inside my Proxmox home lab and used it as the project security workstation. AWS CLI and Terraform were installed inside the container so the lab could be deployed and tested from an isolated system rather than my primary workstation.
 
-## 4. Create the AWS deployer user
-- `media/screenshots/04-aws-create-user-review.png`
-- `media/screenshots/12-aws-retrieve-password.png`
+## 2. AWS Deployment Identity
 
-## 5. Deploy CloudFoxable
-- `media/screenshots/09-terraform-plan-summary.png`
-- `media/screenshots/11-cloudfoxable-deployment-summary.png`
-- `media/screenshots/10-cloudfoxable-next-steps.png`
+A dedicated IAM user named `CloudFoxableDeployer` was created for provisioning the intentionally vulnerable environment.
 
-## Notes
-- Account identifiers were redacted before saving these images for portfolio use.
-- Images were re-saved locally with metadata stripped.
-- Some screenshots are duplicates or alternate crops and can be removed later if the repo becomes too cluttered.
+Public evidence is sanitized to remove the AWS account identifier.
 
-## 6. Verify the CloudFoxable starting identity
-- `media/screenshots/13-ctf-starting-user-verified.png` – `aws sts get-caller-identity` confirms the assessment profile is operating as the CloudFoxable CTF starting user.
+![Sanitized deployer configuration](../media/screenshots/04-aws-create-user-review.png)
+
+The deployer identity is **not** the identity used to begin the attack-path exercises. Its role is limited to creating and later destroying the CloudFoxable lab.
+
+## 3. CloudFoxable Deployment
+
+CloudFoxable was initialized and deployed with Terraform in the lab AWS account. Terraform created the intentionally vulnerable resources and generated the credentials for the CTF starting user.
+
+Secret-bearing Terraform output, state files, AWS credential files, and environment-specific identifiers are intentionally excluded from this repository.
+
+## 4. Starting Identity
+
+The generated CloudFoxable credentials were written to a separate AWS CLI profile named `cloudfoxable`.
+
+The starting context was then verified with:
+
+```bash
+aws sts get-caller-identity --profile cloudfoxable
+```
+
+The public screenshot below has the AWS account number and unique user identifier redacted while retaining the identity name needed to demonstrate the testing context.
+
+![Sanitized STS verification](../media/screenshots/13-ctf-starting-user-verified.png)
+
+The result confirms that subsequent enumeration begins as:
+
+```text
+user/ctf-starting-user
+```
+
+## 5. Separation of Duties
+
+The project intentionally maintains two different contexts:
+
+| Identity | Purpose |
+| --- | --- |
+| `CloudFoxableDeployer` | Provision and destroy the training environment |
+| `ctf-starting-user` | Begin enumeration and controlled attack-path testing |
+
+Keeping those roles separate makes the technical walkthrough clearer and avoids presenting administrator access as the starting point of the assessment.
+
+## Next Phase
+
+The next stage is AWS enumeration from the CTF starting identity, followed by documentation of discovered attack paths, controlled exploitation, remediation, and retesting.
