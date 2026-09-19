@@ -123,6 +123,14 @@ The result confirms that the assessment begins as:
 user/ctf-starting-user
 ```
 
+## 8. Complete the CloudFoxable Setup Flag
+
+CloudFoxable provides an initial flag after deployment. I submitted this flag to the CloudFoxable scoreboard to confirm that the environment was deployed correctly and that the lab was ready for the actual challenge workflow.
+
+This is **not counted as a security finding** in this project. It is a setup-validation step rather than an exploited AWS weakness.
+
+![CloudFoxable setup flag and enabled challenges](../media/screenshots/14-cloudfoxable-setup-flag.jpg)
+
 ## Identity Separation
 
 The project uses two distinct AWS contexts:
