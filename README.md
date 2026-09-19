@@ -1,130 +1,140 @@
 # AWS Cloud Security Engineering
 
-### Cloud Attack-Path Analysis, Controlled Exploitation, Hardening & Retesting
+**CloudFoxable Attack Path Analysis, Controlled Exploitation, Hardening, and Retesting**
 
-This repository documents a hands-on **AWS cloud security engineering project** built around [CloudFoxable](https://github.com/BishopFox/cloudfoxable), Bishop Fox's intentionally vulnerable AWS training environment.
+This repository documents a hands-on AWS cloud security engineering project using [CloudFoxable](https://github.com/BishopFox/cloudfoxable), Bishop Fox's intentionally vulnerable AWS training environment.
 
-The objective is to work through the environment as a small cloud security engagement: establish a constrained starting identity, enumerate reachable AWS resources and permissions, identify exploitable misconfigurations and attack paths, demonstrate their impact inside the authorized lab, remediate the underlying weaknesses, and retest the original paths.
+The focus of this project is not simply completing CTF challenges. The goal is to approach the environment like a small cloud security engagement: begin from a constrained AWS identity, enumerate what that identity can reach, identify attack paths, validate their impact in the authorized lab, remediate the underlying weakness, and retest the original path.
 
-> **Authorized lab only.** All testing in this repository is performed against resources deployed in my own AWS account specifically for CloudFoxable. No production or third-party systems are in scope.
+> **Authorized lab only.** All testing is performed against intentionally vulnerable resources deployed in my own AWS account specifically for this project. No production or third-party systems are in scope.
 
-## Project Objectives
+## Project Goals
 
-- Build a repeatable AWS security testing environment from my home lab
-- Enumerate AWS resources and IAM relationships from the CloudFoxable starting identity
-- Document at least four cloud weaknesses or attack paths
-- Validate findings through controlled exploitation in the lab
-- Translate technical findings into realistic business impact
-- Apply defensive remediation and least-privilege improvements
-- Retest each attack path to verify the remediation
+- Enumerate AWS resources and IAM relationships from a limited starting identity
+- Identify at least four cloud weaknesses or attack paths
+- Demonstrate each attack path through controlled exploitation
+- Capture sanitized technical evidence
+- Explain the technical and business impact
+- Remediate the root cause using defensive cloud security practices
+- Retest the original path to verify the remediation
 
-## Architecture
+## Environment
 
 ```text
 Proxmox Home Lab
-      │
-      └── Ubuntu LXC — Security Workstation
-              ├── AWS CLI
-              ├── Terraform
-              └── CloudFoxable AWS profile
-                       │
-                       ▼
+      |
+      +-- Ubuntu LXC Security Workstation
+              |
+              +-- AWS CLI
+              +-- Terraform
+              +-- CloudFoxable AWS profile
+                      |
+                      v
                   AWS Account
-                       │
-                       └── CloudFoxable
-                           intentionally vulnerable resources
+                      |
+                      +-- CloudFoxable intentionally vulnerable resources
 ```
 
-**Tooling:** Proxmox · Ubuntu · AWS CLI · Terraform · AWS IAM · AWS STS · CloudFoxable
+**Tooling:** Proxmox, Ubuntu, AWS CLI, Terraform, AWS IAM, AWS STS, CloudFoxable
 
-## Phase 1 — Lab Deployment
+## Lab Setup
 
-The assessment workstation was built as an Ubuntu LXC in my Proxmox home lab. A dedicated AWS deployment identity was used to provision CloudFoxable with Terraform. Identifiers shown in the public evidence have been sanitized.
+The AWS lab was deployed from an Ubuntu LXC in my Proxmox home lab. A dedicated deployment identity was used to provision CloudFoxable, while all attack-path testing begins from CloudFoxable's intended CTF starting identity.
 
-### Deployment Identity
+The full installation process, commands, screenshots, and identity separation are documented separately so the main repository can stay focused on the security assessment itself.
 
-The deployer identity was configured with the permissions required to build the lab.
-
-![Sanitized AWS deployer identity](media/screenshots/04-aws-create-user-review.png)
-
-### Starting Identity Verification
-
-After deployment, the generated CloudFoxable credentials were loaded into a separate AWS CLI profile. `aws sts get-caller-identity` verified that testing begins as the intended **CTF starting user**, rather than the privileged deployment identity.
-
-![Sanitized STS starting identity verification](media/screenshots/13-ctf-starting-user-verified.png)
-
-This distinction is important to the project: the privileged identity exists to create and destroy the lab, while attack-path testing begins from CloudFoxable's intended starting context.
+### [View the Full Lab Setup Guide](setup/README.md)
 
 ## Assessment Workflow
 
-Each finding will be documented using the same engineering workflow:
-
 ```text
 Enumerate
-   ↓
-Identify weakness
-   ↓
-Validate attack path
-   ↓
-Capture evidence
-   ↓
-Assess technical + business impact
-   ↓
+   |
+   v
+Identify Weakness
+   |
+   v
+Validate Attack Path
+   |
+   v
+Capture Evidence
+   |
+   v
+Assess Impact
+   |
+   v
 Remediate
-   ↓
-Retest original path
+   |
+   v
+Retest
 ```
 
-A finding is not considered complete when exploitation succeeds. The final step is demonstrating that the remediation prevents or materially restricts the original attack path.
+A finding is not considered complete when exploitation succeeds. The final step is proving that the remediation prevents or materially restricts the original attack path.
 
-## Status
+## Findings
 
-| Phase | Status |
+| Finding | Attack Path | Status |
+| --- | --- | --- |
+| 01 | In progress | Enumeration |
+| 02 | Pending | Not started |
+| 03 | Pending | Not started |
+| 04 | Pending | Not started |
+
+Completed technical write-ups will be added to the [findings directory](findings/).
+
+## Current Status
+
+| Stage | Status |
 | --- | --- |
-| Home-lab assessment workstation | ✅ Complete |
-| AWS CLI / Terraform tooling | ✅ Complete |
-| CloudFoxable deployment | ✅ Complete |
-| CTF starting identity verification | ✅ Complete |
-| Attack-path enumeration | 🚧 In progress |
-| Four documented findings | ⏳ Planned |
-| Remediation and retesting | ⏳ Planned |
-| Business-facing security report | ⏳ Planned |
+| Home lab assessment workstation | Complete |
+| AWS CLI and Terraform tooling | Complete |
+| CloudFoxable deployment | Complete |
+| CTF starting identity verification | Complete |
+| Attack-path enumeration | In progress |
+| Four documented findings | Planned |
+| Remediation and retesting | Planned |
+| Business-facing security report | Planned |
+
+## Finding Format
+
+Each completed finding will document:
+
+1. Security weakness
+2. Discovery and enumeration
+3. Attack path and controlled exploitation
+4. Technical evidence
+5. Technical impact
+6. Business impact
+7. Root cause
+8. Remediation
+9. Retest and proof of fix
+
+A reusable template is available at [templates/finding-template.md](templates/finding-template.md).
 
 ## Repository Structure
 
 ```text
 .
 ├── README.md
+├── setup/
+│   └── README.md
+├── findings/
+│   └── README.md
 ├── docs/
 │   ├── assessment-plan.md
-│   ├── lab-setup-walkthrough.md
 │   └── report-outline.md
-├── findings/
-├── media/
-│   └── screenshots/
 ├── remediation/
 │   └── remediation-log-template.md
-└── templates/
-    └── finding-template.md
+├── templates/
+│   └── finding-template.md
+└── media/
+    └── screenshots/
 ```
 
-## Finding Format
+## Repository Security
 
-Each completed finding will include:
-
-1. **Security weakness**
-2. **Discovery and enumeration**
-3. **Attack path / validation**
-4. **Technical evidence**
-5. **Potential business impact**
-6. **Root cause**
-7. **Remediation**
-8. **Retest / proof of fix**
-
-## Security of This Repository
-
-AWS account identifiers and other environment-specific values are redacted from published screenshots. Terraform state, AWS credential files, private keys, variable files, and other secret-bearing artifacts are excluded from version control.
+AWS account identifiers and other environment-specific values are redacted from public evidence. Terraform state, AWS credentials, private keys, variable files, and other secret-bearing artifacts are excluded from version control.
 
 ## Attribution
 
-[CloudFoxable](https://github.com/BishopFox/cloudfoxable) is an intentionally vulnerable AWS training platform created and maintained by **Bishop Fox**. This repository contains my own lab deployment documentation, testing evidence, analysis, remediation work, and reporting; it does not redistribute the CloudFoxable project itself.
+[CloudFoxable](https://github.com/BishopFox/cloudfoxable) is an intentionally vulnerable AWS training platform created and maintained by **Bishop Fox**. This repository contains my own deployment documentation, assessment evidence, attack-path analysis, remediation work, and reporting.
