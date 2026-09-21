@@ -75,6 +75,10 @@ A finding is not considered complete when exploitation succeeds. The final step 
 
 ### 01 — AWS Environment Enumeration with CloudFox
 
+
+https://github.com/user-attachments/assets/4efdac83-275c-4756-b74e-1f0fa87dd37b
+
+
 The first recorded assessment step begins from CloudFoxable's intentionally limited `ctf-starting-user` identity and uses CloudFox to map the AWS environment before attempting exploitation.
 
 The recording demonstrates:
