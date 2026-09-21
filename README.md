@@ -13,7 +13,7 @@ The focus of this project is not simply completing CTF challenges. The goal is t
 - Enumerate AWS resources and IAM relationships from a limited starting identity
 - Identify at least four cloud weaknesses or attack paths
 - Demonstrate each attack path through controlled exploitation
-- Capture sanitized technical evidence
+- Capture technical evidence through terminal recordings, screenshots, and command output
 - Explain the technical and business impact
 - Remediate the root cause using defensive cloud security practices
 - Retest the original path to verify the remediation
@@ -71,11 +71,39 @@ Retest
 
 A finding is not considered complete when exploitation succeeds. The final step is proving that the remediation prevents or materially restricts the original attack path.
 
+## Demonstrations
+
+### 01 — AWS Environment Enumeration with CloudFox
+
+The first recorded assessment step begins from CloudFoxable's intentionally limited `ctf-starting-user` identity and uses CloudFox to map the AWS environment before attempting exploitation.
+
+The recording demonstrates:
+
+- AWS caller identity validation
+- Account-wide resource inventory
+- Public service endpoint discovery
+- EC2 instance enumeration
+- IAM user and role enumeration
+
+```bash
+aws sts get-caller-identity --profile cloudfoxable
+cloudfox aws --profile cloudfoxable -v2 inventory
+cloudfox aws --profile cloudfoxable -v2 endpoints
+cloudfox aws --profile cloudfoxable -v2 instances
+cloudfox aws --profile cloudfoxable -v2 principals
+```
+
+The enumeration identified accessible AWS resources, exposed Lambda Function URLs, and IAM principals that could be investigated in later attack-path validation.
+
+**[Watch the CloudFoxable enumeration demo](media/videos/01-cloudfoxable-enumeration.mp4)**
+
+A more detailed explanation of the enumeration phase is available in [docs/enumeration.md](docs/enumeration.md).
+
 ## Findings
 
 | Finding | Attack Path | Status |
 | --- | --- | --- |
-| 01 | In progress | Enumeration |
+| 01 | In progress | Enumeration complete / validation in progress |
 | 02 | Pending | Not started |
 | 03 | Pending | Not started |
 | 04 | Pending | Not started |
@@ -90,7 +118,8 @@ Completed technical write-ups will be added to the [findings directory](findings
 | AWS CLI and Terraform tooling | Complete |
 | CloudFoxable deployment | Complete |
 | CTF starting identity verification | Complete |
-| Attack-path enumeration | In progress |
+| Attack-path enumeration | Complete |
+| Initial public-facing Lambda validation | Complete |
 | Four documented findings | Planned |
 | Remediation and retesting | Planned |
 | Business-facing security report | Planned |
@@ -122,18 +151,24 @@ A reusable template is available at [templates/finding-template.md](templates/fi
 │   └── README.md
 ├── docs/
 │   ├── assessment-plan.md
+│   ├── enumeration.md
 │   └── report-outline.md
 ├── remediation/
 │   └── remediation-log-template.md
 ├── templates/
 │   └── finding-template.md
 └── media/
-    └── screenshots/
+    ├── screenshots/
+    └── videos/
+        ├── README.md
+        └── 01-cloudfoxable-enumeration.mp4
 ```
 
 ## Repository Security
 
-AWS account identifiers and other environment-specific values are redacted from public evidence. Terraform state, AWS credentials, private keys, variable files, and other secret-bearing artifacts are excluded from version control.
+AWS credentials, secret access keys, session tokens, passwords, private keys, Terraform state, variable files, and other secret-bearing artifacts are excluded from version control and public evidence.
+
+Non-secret lab identifiers such as AWS account IDs, resource names, ARNs, or temporary lab endpoints may remain visible in screenshots or recordings when they provide useful technical context. These identifiers do not provide authentication by themselves.
 
 ## Attribution
 
