@@ -99,7 +99,6 @@ cloudfox aws --profile cloudfoxable -v2 principals
 
 The enumeration identified accessible AWS resources, exposed Lambda Function URLs, and IAM principals that could be investigated in later attack-path validation.
 
-**[Watch the CloudFoxable enumeration demo](media/videos/01-cloudfoxable-enumeration.mp4)**
 
 A more detailed explanation of the enumeration phase is available in [docs/enumeration.md](docs/enumeration.md).
 
