@@ -14,12 +14,12 @@ Perform a hands-on AWS security assessment against an intentionally vulnerable t
 1. **Lab setup** – build the assessment environment and deploy CloudFoxable.
 2. **Enumeration** – inspect IAM, accessible services, secrets exposure, and privilege paths.
 3. **Validation** – confirm the finding with controlled testing in the isolated lab.
-4. **Documentation** – capture commands, screenshots, and findings notes.
+4. **Documentation** – capture commands, screenshots, short terminal recordings, and findings notes.
 5. **Remediation** – apply the fix and record what changed.
 6. **Retesting** – prove the original path no longer works.
 
 ## Expected Deliverables
-- GitHub repository with sanitized evidence
+- GitHub repository with technical evidence that excludes credentials and secret-bearing artifacts
 - technical write-up for each finding
 - business-facing final report
-- optional short demo video
+- short demo videos for selected assessment phases and findings
